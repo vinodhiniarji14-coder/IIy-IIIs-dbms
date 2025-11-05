@@ -1,0 +1,11 @@
+-- Modify view2 to include age
+CREATE OR REPLACE VIEW view2 AS
+SELECT name, marks, age
+FROM source_table;
+
+-- Modify view1 with condition and check option
+CREATE OR REPLACE VIEW view1 AS
+SELECT *
+FROM source_table
+WHERE age > 18
+WITH CHECK OPTION;
