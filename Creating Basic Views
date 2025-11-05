@@ -1,0 +1,15 @@
+-- Create view1 with rollno and name
+CREATE VIEW view1 AS
+SELECT rollno, name
+FROM source_table;
+
+-- Create view2 with name and marks
+CREATE VIEW view2 AS
+SELECT name, marks
+FROM source_table;
+
+-- Display view1 data
+SELECT * FROM view1;
+
+-- Display all views in the database
+SHOW FULL TABLES IN aditya_university WHERE TABLE_TYPE = 'V
