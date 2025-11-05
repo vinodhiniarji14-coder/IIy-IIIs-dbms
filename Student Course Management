@@ -1,0 +1,47 @@
+-- Step 1: Create the database if it doesn't exist
+CREATE DATABASE IF NOT EXISTS aditya_university;
+
+-- Step 2: Select the database
+USE aditya_university;
+
+-- Step 3: Create the 'courses' table
+CREATE TABLE IF NOT EXISTS courses (
+    course_id INT AUTO_INCREMENT PRIMARY KEY,
+    course_name VARCHAR(25) UNIQUE NOT NULL
+);
+
+-- Step 4: Insert course names
+INSERT INTO courses (course_name) VALUES
+('DBMS'), ('Python'), ('Java'), ('C++'), ('AI'), ('DSA'), 
+('Machine Learning'), ('Cyber Security'), ('Data Science'), ('Big Data');
+
+-- Step 5: Create the 'aiml6' student table
+DROP TABLE IF EXISTS aiml6;
+CREATE TABLE aiml6 (
+    id VARCHAR(15) PRIMARY KEY,
+    name VARCHAR(20),
+    marks INT CHECK (marks >= 0 AND marks <= 100),
+    course_id INT,
+    semester VARCHAR(10),
+    phone VARCHAR(15),
+    FOREIGN KEY (course_id) REFERENCES courses(course_id)
+);
+
+-- Step 6: Insert student records
+INSERT INTO aiml6 (id, name, marks, course_id, semester, phone)
+VALUES
+('25B21AI001', 'Manu', 98, (SELECT course_id FROM courses WHERE course_name = 'DBMS'), NULL, '9876543210'),
+('25B21AI002', 'Reshma', 85, (SELECT course_id FROM courses WHERE course_name = 'Python'), NULL, '9876543211'),
+('25B21AI003', 'Shree', 92, (SELECT course_id FROM courses WHERE course_name = 'Java'), NULL, '9876543212'),
+('25B21AI004', 'Laxman', 78, (SELECT course_id FROM courses WHERE course_name = 'C++'), NULL, '9876543213'),
+('25B21AI005', 'Arjun', 88, (SELECT course_id FROM courses WHERE course_name = 'AI'), NULL, '9876543214'),
+('25B21AI006', 'Radha', 65, (SELECT course_id FROM courses WHERE course_name = 'DSA'), NULL, '9876543215'),
+('25B21AI007', 'Krishna', 90, (SELECT course_id FROM courses WHERE course_name = 'Machine Learning'), NULL, '9876543216'),
+('25B21AI008', 'Pooja', 87, (SELECT course_id FROM courses WHERE course_name = 'Cyber Security'), 'Sem 3', '9876543217'),
+('25B21AI009', 'Sai', 91, (SELECT course_id FROM courses WHERE course_name = 'Data Science'), 'Sem 2', '9876543218'),
+('25B21AI010', 'Kiran', 82, (SELECT course_id FROM courses WHERE course_name = 'Big Data'), 'Sem 4', '9876543219');
+
+-- Step 7: Final output: view joined student and course data
+SELECT a.id, a.name, a.marks, c.course_name, a.semester, a.phone
+FROM aiml6 a
+JOIN courses c ON a.course_id = c.course_id;
