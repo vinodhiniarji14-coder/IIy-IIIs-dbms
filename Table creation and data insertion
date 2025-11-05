@@ -1,0 +1,20 @@
+-- Use database
+USE aditya_university;
+
+-- Create source table
+CREATE TABLE source_table (
+    rollno INT,
+    name VARCHAR(15),
+    marks INT
+);
+
+-- Insert values
+INSERT INTO source_table (rollno, name, marks) VALUES
+(501, 'jyothi', 90),
+(502, 'sai', 95),
+(504, 'yamuna', 70),
+(505, 'padma', 60),
+(503, 'ravi', 80);
+
+-- Display table data
+SELECT * FROM source_table;
