@@ -1,0 +1,143 @@
+-- Step 1: Create the database
+CREATE DATABASE IF NOT EXISTS aditya_university;
+USE aditya_university;
+
+-- Step 2: Drop existing tables if needed (clean start)
+DROP TABLE IF EXISTS student_subjects;
+DROP TABLE IF EXISTS subjects;
+DROP TABLE IF EXISTS aiml6;
+
+-- Step 3: Create 'aiml6' table (students)
+CREATE TABLE aiml6 (
+    id VARCHAR(15) PRIMARY KEY,
+    name VARCHAR(20),
+    semester VARCHAR(10),
+    phone VARCHAR(15)
+);
+
+-- Step 4: Insert students
+INSERT INTO aiml6 (id, name, semester, phone) VALUES
+('25B21AI001', 'Manu', 'Sem 3', '9876543210'),
+('25B21AI002', 'Reshma', 'Sem 3', '9876543211'),
+('25B21AI003', 'Shree', 'Sem 3', '9876543212'),
+('25B21AI004', 'Laxman', 'Sem 3', '9876543213'),
+('25B21AI005', 'Arjun', 'Sem 3', '9876543214'),
+('25B21AI006', 'Radha', 'Sem 3', '9876543215'),
+('25B21AI007', 'Krishna', 'Sem 3', '9876543216'),
+('25B21AI008', 'Pooja', 'Sem 3', '9876543217'),
+('25B21AI009', 'Sai', 'Sem 3', '9876543218'),
+('25B21AI010', 'Kiran', 'Sem 3', '9876543219');
+
+-- Step 5: Create 'subjects' table
+CREATE TABLE subjects (
+    subject_id INT AUTO_INCREMENT PRIMARY KEY,
+    subject_name VARCHAR(50) UNIQUE NOT NULL
+);
+
+-- Step 6: Insert common subjects
+INSERT INTO subjects (subject_name) VALUES
+('DBMS'), ('OS'), ('DSA'), ('AI'), ('Python');
+
+-- Step 7: Create 'student_subjects' table (link student to subjects + marks)
+CREATE TABLE student_subjects (
+    student_id VARCHAR(15),
+    subject_id INT,
+    marks INT CHECK (marks >= 0 AND marks <= 100),
+    PRIMARY KEY (student_id, subject_id),
+    FOREIGN KEY (student_id) REFERENCES aiml6(id),
+    FOREIGN KEY (subject_id) REFERENCES subjects(subject_id)
+);
+
+-- Step 8: Insert marks for each student and each subject
+-- (Example: assign same marks for demo purposes. You can vary them.)
+
+-- Define each subject ID
+SET @dbms := (SELECT subject_id FROM subjects WHERE subject_name = 'DBMS');
+SET @os := (SELECT subject_id FROM subjects WHERE subject_name = 'OS');
+SET @dsa := (SELECT subject_id FROM subjects WHERE subject_name = 'DSA');
+SET @ai := (SELECT subject_id FROM subjects WHERE subject_name = 'AI');
+SET @python := (SELECT subject_id FROM subjects WHERE subject_name = 'Python');
+
+-- Loop insert: for demo, use different marks
+INSERT INTO student_subjects (student_id, subject_id, marks) VALUES
+('25B21AI001', @dbms, 95), ('25B21AI001', @os, 90), ('25B21AI001', @dsa, 85), ('25B21AI001', @ai, 88), ('25B21AI001', @python, 92),
+('25B21AI002', @dbms, 88), ('25B21AI002', @os, 80), ('25B21AI002', @dsa, 78), ('25B21AI002', @ai, 85), ('25B21AI002', @python, 89),
+('25B21AI003', @dbms, 95), ('25B21AI003', @os, 84), ('25B21AI003', @dsa, 88), ('25B21AI003', @ai, 83), ('25B21AI003', @python, 86),
+('25B21AI004', @dbms, 95), ('25B21AI004', @os, 70), ('25B21AI004', @dsa, 72), ('25B21AI004', @ai, 68), ('25B21AI004', @python, 74),
+('25B21AI005', @dbms, 84), ('25B21AI005', @os, 79), ('25B21AI005', @dsa, 77), ('25B21AI005', @ai, 82), ('25B21AI005', @python, 85),
+('25B21AI006', @dbms, 95), ('25B21AI006', @os, 68), ('25B21AI006', @dsa, 64), ('25B21AI006', @ai, 71), ('25B21AI006', @python, 69),
+('25B21AI007', @dbms, 93), ('25B21AI007', @os, 91), ('25B21AI007', @dsa, 89), ('25B21AI007', @ai, 92), ('25B21AI007', @python, 94),
+('25B21AI008', @dbms, 87), ('25B21AI008', @os, 85), ('25B21AI008', @dsa, 84), ('25B21AI008', @ai, 86), ('25B21AI008', @python, 88),
+('25B21AI009', @dbms, 90), ('25B21AI009', @os, 88), ('25B21AI009', @dsa, 85), ('25B21AI009', @ai, 89), ('25B21AI009', @python, 87),
+('25B21AI010', @dbms, 65), ('25B21AI010', @os, 78), ('25B21AI010', @dsa, 76), ('25B21AI010', @ai, 79), ('25B21AI010', @python, 81);
+
+-- Step 9: Final query – show student ID and DBMS marks
+SELECT ss.student_id AS id, ss.marks AS dbms_marks
+FROM student_subjects ss
+JOIN subjects s ON ss.subject_id = s.subject_id
+WHERE s.subject_name = 'DBMS';
+
+SELECT ss.student_id, ss.marks
+FROM student_subjects ss
+JOIN subjects s ON ss.subject_id = s.subject_id
+WHERE s.subject_name = 'DBMS'
+  AND ss.marks = (
+    SELECT MAX(marks)
+    FROM student_subjects
+    WHERE subject_id = s.subject_id
+);
+
+SELECT a.id, a.name, ss.marks
+FROM student_subjects ss
+JOIN subjects s ON ss.subject_id = s.subject_id
+JOIN aiml6 a ON ss.student_id = a.id
+WHERE s.subject_name = 'DBMS'
+  AND ss.marks = (
+    SELECT MAX(ss2.marks)
+    FROM student_subjects ss2
+    JOIN subjects s2 ON ss2.subject_id = s2.subject_id
+    WHERE s2.subject_name = 'DBMS'
+);
+
+SELECT a.id, a.name, ss.marks
+FROM student_subjects ss
+JOIN subjects s ON ss.subject_id = s.subject_id
+JOIN aiml6 a ON ss.student_id = a.id
+WHERE s.subject_name = 'DBMS'
+  AND ss.marks = (
+    SELECT MIN(ss2.marks)
+    FROM student_subjects ss2
+    JOIN subjects s2 ON ss2.subject_id = s2.subject_id
+    WHERE s2.subject_name = 'DBMS'
+);
+
+SELECT ROUND(AVG(ss.marks), 2) AS average_dbms_marks
+FROM student_subjects ss
+JOIN subjects s ON ss.subject_id = s.subject_id
+WHERE s.subject_name = 'DBMS';
+
+SELECT ROUND(SUM(ss.marks), 2) AS average_dbms_marks
+FROM student_subjects ss
+JOIN subjects s ON ss.subject_id = s.subject_id
+WHERE s.subject_name = 'DBMS';
+
+SELECT COUNT(marks) AS dbms_student_count
+FROM student_subjects ss
+JOIN subjects s ON ss.subject_id = s.subject_id
+WHERE s.subject_name = 'DBMS';
+
+UPDATE student_subjects ss
+JOIN subjects s ON ss.subject_id = s.subject_id
+SET ss.marks = NULL
+WHERE ss.student_id = '25B21AI009'
+  AND s.subject_name = 'DBMS';
+
+SELECT COUNT(marks) AS dbms_student_count
+FROM student_subjects ss
+JOIN subjects s ON ss.subject_id = s.subject_id
+WHERE s.subject_name = 'DBMS';  
+
+SELECT COUNT(*) AS dbms_student_count
+FROM student_subjects ss
+JOIN subjects s ON ss.subject_id = s.subject_id
+WHERE s.subject_name = 'DBMS';
