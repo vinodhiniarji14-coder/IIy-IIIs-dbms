@@ -1,0 +1,9 @@
+-- Add new column 'age' to source_table
+ALTER TABLE source_table ADD COLUMN age INT;
+
+-- Update age values for each rollno
+UPDATE source_table SET age = 23 WHERE rollno = 501;
+UPDATE source_table SET age = 18 WHERE rollno = 502;
+UPDATE source_table SET age = 21 WHERE rollno = 504;
+UPDATE source_table SET age = 25 WHERE rollno = 505;
+UPDATE source_table SET age = 22 WHERE rollno = 503;
