@@ -1,0 +1,38 @@
+
+-- Create new database
+CREATE DATABASE normalization;
+USE normalization;
+
+-- Students table
+CREATE TABLE students (
+    studentid INT,
+    studentname VARCHAR(15),
+    major VARCHAR(10)
+);
+
+-- Courses table
+CREATE TABLE courses (
+    courseid INT,
+    coursename VARCHAR(10),
+    credits INT
+);
+
+-- Enrollments table
+CREATE TABLE enrollments (
+    studentid INT,
+    courseid INT,
+    enrollment DATE
+);
+
+-- Instructors table
+CREATE TABLE instructors (
+    instructorid INT,
+    instructorname VARCHAR(15),
+    phone BIGINT
+);
+
+-- Course_instructors table (relationship)
+CREATE TABLE course_instructors (
+    courseid INT,
+    instructorid INT
+);
