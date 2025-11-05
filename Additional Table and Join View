@@ -1,0 +1,17 @@
+-- Create new table studentv
+CREATE TABLE studentv (
+    id VARCHAR(10)
+);
+
+-- Insert values into studentv
+INSERT INTO studentv (id) VALUES
+('ai01'),
+('ai02');
+
+-- Drop old view1
+DROP VIEW view1;
+
+-- Create new view1 joining source_table and studentv
+CREATE VIEW view1 AS
+SELECT rollno, id
+FROM source_table, studentv;
