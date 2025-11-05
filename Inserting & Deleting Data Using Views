@@ -1,0 +1,11 @@
+-- Insert into view1 (will also affect source_table)
+INSERT INTO view1 VALUES (506, 'preethi');
+
+-- Insert into view2
+INSERT INTO view2 VALUES ('madhu', 80);
+
+-- Delete using view1
+DELETE FROM view1 WHERE rollno = 506;
+
+-- Disable safe update mode (to allow updates without WHERE key)
+SET SQL_SAFE_UPDATES = 0;
